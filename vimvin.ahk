@@ -1,15 +1,19 @@
 ﻿#Requires AutoHotkey v2.0
 
+#include config.ahk
+#include WindowTracker.ahk
+#include UI.ahk
+
 ; MsgBox "Velcome to Vicki's Vimified Vindows`n`Press Win+x to gtfo"
 
-; Read config
-;if (FileRead("C:\...
-
 ; DEBUG
-; KeyHistory
-
+if (debugMode) {
+	KeyHistory
+}
 
 ; TODO:
+; Get editor text
+;
 ; r - replace char
 ; R - replace until ESC
 ; gg - go to top of doc
@@ -27,69 +31,9 @@
 ;
 
 
-class WindowObj extends Object {
-	winID := 0
-	winClass := ""
-	
-	caretOffset := 0
-	caretScale := 1
-	
-	winPosX := 0
-	winPosY := 0
-	winWidth :=0
-	winHeight := 0
-}
-
-
-caretPosX := 0 ; move to WindowObj
-caretPosY := 0 ; move to WindowObj
-activeWindowID := 0 ; move to WindowObj array
-aWindowString := "Window: " ; move to WindowObj
-activeWindowClass := "" ; move to WindowObj
-
-caretString := caretPosY . ", " . caretPosX
-mode := "NORMAL"
-
-testWindowObj0 := WindowObj()
-testWindowObj1 := WindowObj()
-
-testWindowArray := Array(testWindowObj0, testWindowObj1)
-
-; INIT
-WinGetPos &X, &Y, &W, &H, "A"
-
-
-; ############
-; ##	UI	##
-; ############
-
-UI := Gui()
-
-ModeBar := UI.Add("StatusBar",,) ; " - " . mode . " - " . caretString)
-UIModeBarUpdate()
-UI.Opt("+AlwaysOnTop")
-UI.Show("w400 x" . A_ScreenWidth - 400 . " y" . A_ScreenHeight - 100)
-
-; To be moved to WindowObj class
-UIUpdateCaret(x, y) {
-	global caretString := caretPosY . ", " . caretPosX
-	UIModeBarUpdate()
-}
-
-UIModeBarUpdate() {
-	GetActiveWindow						; Function call to be moved
-	ModeBar.SetText(" - " . mode . " - " . caretString . " " . aWindowString)
-}
-
-GetActiveWindow() {
-	global activeWindowID := WinExist("A")
-	global activeWindowClass := WinGetClass("A")
-	global aWindowString := "Window: " . activeWindowClass . " (" . activeWindowID . ")"
-}
-
 SetMode(new_mode) {
 	global mode := new_mode
-	UIModeBarUpdate()
+	UIModeBarUpdate()					; TODO: Make general UI update function
 	}
 
 ; ################
