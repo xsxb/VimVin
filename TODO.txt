@@ -1,0 +1,23 @@
+ TODO:
+ Get editor text
+ Update UI
+
+ NORMAL:
+ K - get manual entry
+ L - end of page
+ J - concatenate lines
+
+ r - replace char
+ R - replace until ESC
+
+VISUAL:
+ gg - go to top of doc
+ Ctrl + r - redo
+ u - change to lower (visual)
+ U - change to upper (visual)
+ > - shift text right
+ <
+ <<
+
+ Execute n times:
+ GetCount() {}							 Read [0-9] with KeybdHook into hotstring for executing n times
