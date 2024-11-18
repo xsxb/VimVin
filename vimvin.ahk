@@ -4,11 +4,12 @@
 #include WindowTracker.ahk
 #include UI.ahk
 
+activeModule := ""
+
 ; MODULES:
 if (notepad == 1)
 	#include "%A_ScriptDir%\modules\Notepad.ahk"
 
-activeModule := ""
 
 ; DEBUG
 if (debugMode) {

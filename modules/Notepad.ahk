@@ -4,17 +4,30 @@
 
 ; TODO: Get EditControl properties
 
-SetTimer UpdateText, 1000							; ; To be called once on editor open
+
+; Listening for any keystroke
+; Doesn't register arrow keys
+ih := InputHook("L1 M V")
+ih.NotifyNonText := 1
+ih.MinSendLevel := 0
+AnyKeyListen:
+	ih.Start()
+	ih.Wait()
+	if (ih.Input){
+		;UpdateText()
+		UpdatePos()
+		Goto AnyKeyListen
+	}
+
+; SetTimer UpdateText, 100							; To be called once on editor open (and on keystroke?)
 UpdateText() {
 		if WinActive("ahk_class Notepad") {
 		text := WinGetText()
-		; textPart := SubStr(text, 1, 10)
-		; MsgBox "Text: " . textPart
 		}											; Remember to free memory on window close
 }
 
-SetTimer WatchPos, 100
-WatchPos() {
+; SetTimer UpdatePos, 100
+UpdatePos() {
 	if WinActive("ahk_class Notepad") {
 		controlsArray := WinGetControlsHwnd("A")
 		if EditGetCurrentLine(controlsArray[1]) {
@@ -37,6 +50,8 @@ WatchCaret() {
 	}
 }
 
+~LButton:: UpdatePos()
+
 
 ; ########################
 ; ##	 NORMAL Mode	##
@@ -49,51 +64,90 @@ WatchCaret() {
 	::: SetMode("COMMAND")
 
 	; Motions
-	h:: Send '{LEFT}'
-	l:: Send '{RIGHT}'
-	j:: Send '{DOWN}'
-	k:: Send '{UP}'
-	_:: Send '{Home}'
-	$:: Send '{End}'
-	e:: Send '^{RIGHT}{LEFT}'
-	b:: Send '^{LEFT}'
-	w:: Send '^{RIGHT}'
+	h:: {
+		Send '{LEFT}'
+		UpdatePos()
+		}
+	l:: { 
+		Send '{RIGHT}'
+		UpdatePos()
+		}
+	j:: {
+		Send '{DOWN}'
+		UpdatePos()
+		}
+	k:: {
+		Send '{UP}'
+		UpdatePos()
+		}
+	_:: {
+		Send '{Home}'	
+		UpdatePos()
+		}
+	$:: {
+		Send '{End}'
+		UpdatePos()
+		}
+	e:: {
+		Send '^{RIGHT}{LEFT}'					; when followed by space ; TODO: end of line
+		UpdatePos()
+		}
+	b:: {
+		Send '^{LEFT}'
+		UpdatePos()
+		}
+	w:: {
+		Send '^{RIGHT}'
+		UpdatePos()
+		}
 	g:: {
 		if (A_PriorHotkey == A_ThisHotkey) {	;	gg
 		Send '^{Home}'
+		UpdatePos()
 		}
 	}	
-	+g:: Send '^{End}'
+	+g:: {
+	Send '^{End}'
+	UpdatePos()
+	}
 	[::return
 	]::return
 	+i:: {
 		Send '{Home}'
 		SetMode("INSERT")
-	}
+		UpdatePos()
+		}
 	+a:: {
 		Send '{End}'
 		SetMode("INSERT")
-	}	
+		UpdatePos()
+		}	
 	o:: {
 		Send '{End}'
 		Send Chr(10)
 		SetMode("INSERT")
-	}
+		UpdatePos()
+		}
 	+o:: {
 		Send '{Home}'
 		Send Chr(10)
 		SetMode("INSERT")
-	}
+		UpdatePos()
+		}
 	
-	u:: Send "^z"
+	u:: {
+		Send "^z"
+		UpdatePos()
+		}
 	
 	Backspace:: Send '{LEFT}'
 	
 	>:: {
 		if (A_PriorHotkey == A_ThisHotkey) {				; >>
 			Send '{Home}{Tab}'
+			UpdatePos()
+			}
 		}
-	}
 	
 	; Unbinds/TODO
 	+l::return					; L - end of page
@@ -105,6 +159,8 @@ WatchCaret() {
 	+r::return					; R - replace until ESC
 	+t::return
 	t::return
+	s::return
+	f::return
 	m::return
 	+m::return
 	{::return					; - jump to end of paragraph
@@ -112,8 +168,8 @@ WatchCaret() {
 	.::return
 	,::return
 	`;::return
-	/::return					; Search forward
-	?::return					; Search backward
+	/:: Send '^f'				; TODO: Set search forward
+	?:: Send '^f'				; TODO: Set search backward
 	0::return
 	1::return
 	2::return
@@ -147,27 +203,38 @@ WatchCaret() {
 	d:: {
 		if (A_PriorHotkey != A_ThisHotkey) {				; d
 			Send "^x"
+			UpdatePos()
 		}
 		if (A_PriorHotkey == A_ThisHotkey) {				; dd
 			Send '{Home}+{End}^x{Backspace}{Home}'
+			UpdatePos()
 		}
 	}
 	+d:: Send "^{Delete}"
 	y:: {													; y
 		if(A_PriorHotkey != A_ThisHotkey) {
 			Send "^c"
+			UpdatePos()
 		}
 		else {												; yy
 			Send '{Home}+{End}^c'
+			UpdatePos()
 		}	
 	}
-	p:: Send "^v"
+	p:: {
+	Send "^v"
+	UpdatePos()
+	}
 	+p:: {
 		Send '{Home}'
 		Send Chr(10)
 		Send "{UP}^{v}"
+		UpdatePos()
 	}
-	x:: Send '{Delete}'
+	x:: {
+	Send '{Delete}'
+	UpdatePos()
+	}
 	
 #HotIf
 
@@ -193,13 +260,31 @@ WatchCaret() {
 	i:: SetMode("INSERT")
 
 	; Motions
-	h:: Send '{SHIFT}+{LEFT}'
-	l:: Send '{SHIFT}+{RIGHT}'
-	j:: Send '{SHIFT}+{DOWN}'
-	k:: Send '{SHIFT}+{UP}'
-	e:: Send '^{RIGHT}{LEFT}'
-	b:: Send '^{LEFT}'
-	
+	h:: { 
+		Send '{SHIFT}+{LEFT}'
+		UpdatePos()
+		}
+	l:: {
+		Send '{SHIFT}+{RIGHT}'
+		UpdatePos()
+		}
+	j:: {
+		Send '{SHIFT}+{DOWN}'
+		UpdatePos()
+		}
+	k:: {
+		Send '{SHIFT}+{UP}'
+		UpdatePos()
+		}
+	e:: {
+		Send '^{RIGHT}{LEFT}'
+		UpdatePos()
+		}
+	b:: {
+		Send '^{LEFT}'
+		UpdatePos()
+		}
+		
 #HotIf
 
 

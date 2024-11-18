@@ -152,7 +152,10 @@
 
 #HotIf mode == "VISUAL"
 
-	ESCAPE:: SetMode("NORMAL")
+	ESCAPE:: {
+	SetMode("NORMAL")
+	Send '{Right}'							; Unmarks without moving cursor
+	}
 	i:: SetMode("INSERT")
 
 	; Motions

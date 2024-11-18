@@ -3,6 +3,10 @@
 Update active Window on switch
 Update editor text in a reasonable manner
 
+Settings UI:
+	-Custom hotkeys
+	-Active modules
+
 NORMAL:
 K - get manual entry
 L - end of page
