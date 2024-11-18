@@ -1,23 +1,24 @@
  TODO:
- Get editor text
- Update UI
+ 
+Update active Window on switch
+Update editor text in a reasonable manner
 
- NORMAL:
- K - get manual entry
- L - end of page
- J - concatenate lines
+NORMAL:
+K - get manual entry
+L - end of page
+J - concatenate lines
 
- r - replace char
- R - replace until ESC
+r - replace char
+R - replace until ESC
 
 VISUAL:
- gg - go to top of doc
- Ctrl + r - redo
- u - change to lower (visual)
- U - change to upper (visual)
- > - shift text right
- <
- <<
+gg - go to top of doc
+G - bottom of doc
+Ctrl + r - redo
+u - change to lower (visual)
+U - change to upper (visual)
+> - shift text right
+<
+<<
 
- Execute n times:
- GetCount() {}							 Read [0-9] with KeybdHook into hotstring for executing n times
+ Execute command n times					; Read [0-9] with KeybdHook into hotstring for executing n times

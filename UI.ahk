@@ -4,29 +4,42 @@
 ; ##	UI	##
 ; ############
 
+editPosX := 0
+editPosY := 0
+
+editPosString := ""
+caretString := ""
+
 UI := Gui()
-ModeBar := UI.Add("StatusBar",,) ; " - " . mode . " - " . caretString)
-; ModeBar.OnEvent("Close", VimVinClose())
-UIModeBarUpdate()
+LastLine := UI.Add("StatusBar",,) ; " - " . mode . " - " . caretString)
+; LastLine.OnEvent("Close", VimVinClose())
+UILastLineUpdate()
 UI.Opt("+AlwaysOnTop")
 UI.Show("w400 x" . A_ScreenWidth - 400 . " y" . A_ScreenHeight - 100)
+
 
 ; To be moved to WindowObj class
 UIUpdateCaret(x, y) {
 	global caretString := caretPosY . ", " . caretPosX
-	UIModeBarUpdate()
+	UILastLineUpdate()
 }
 
-UIModeBarUpdate() {
-	GetActiveWindow						; Function call to be moved
-	ModeBar.SetText(" - " . mode . " - " . caretString . " " . aWindowString)
+SetTimer UILastLineUpdate, 100
+UILastLineUpdate() {
+	if (lastLinePos == "WindowBottom") {
+		UIMoveToActiveWindow
+	}
+	editPosString := editPosY . " : " . editPosX
+	LastLine.SetText(" - " . mode . " - " . caretString . " " . aWindowString . " " . editPosString)
 }
 
-GetActiveWindow() {
+UIMoveToActiveWindow() {
 	global activeWindowID := WinExist("A")
 	global activeWindowClass := WinGetClass("A")
 	global aWindowString := "Window: " . activeWindowClass . " (" . activeWindowID . ")"
-}
+	WinGetPos &X, &Y, &W, &H, "A"
+	UI.Move(X, Y + H + lastLineOffsetY, W)
+	}
 
 VimVinClose() {
 	ExitApp

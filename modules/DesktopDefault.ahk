@@ -1,48 +1,14 @@
 #Requires AutoHotkey v2.0
 
-; Module for Windows default Notepad
-
-; TODO: Get EditControl properties
-
-SetTimer UpdateText, 1000							; ; To be called once on editor open
-UpdateText() {
-		if WinActive("ahk_class Notepad") {
-		text := WinGetText()
-		; textPart := SubStr(text, 1, 10)
-		; MsgBox "Text: " . textPart
-		}											; Remember to free memory on window close
-}
-
-SetTimer WatchPos, 100
-WatchPos() {
-	if WinActive("ahk_class Notepad") {
-		controlsArray := WinGetControlsHwnd("A")
-		if EditGetCurrentLine(controlsArray[1]) {
-			global editPosY := EditGetCurrentLine(controlsArray[1])
-			global editPosX := EditGetCurrentCol(controlsArray[1])		; Column doesn't update on shift marking
-		}
-	}
-}
-
-; SetTimer WatchCaret, 100
-WatchCaret() {
-    if CaretGetPos(&x, &y) {
-		global caretPosX := x
-		global caretPosY := y
-		UIUpdateCaret(x, y)
-        ToolTip "X" x " Y" y, x, y - 20		; Not my line, Y value doesn't make sense
-		}
-    else {
-        ; ToolTip "No caret"
-	}
-}
+; Module for Windows Desktop
+; Work in progress and unused
 
 
 ; ########################
 ; ##	 NORMAL Mode	##
 ; ########################
 
-#HotIf mode == "NORMAL" && WinActive("ahk_class Notepad")
+#HotIf mode == "NORMAL"
 	; Mode switch
 	v:: SetMode("VISUAL")
 	i:: SetMode("INSERT")
@@ -87,15 +53,12 @@ WatchCaret() {
 	
 	u:: Send "^z"
 	
-	Backspace:: Send '{LEFT}'
-	
 	>:: {
 		if (A_PriorHotkey == A_ThisHotkey) {				; >>
 			Send '{Home}{Tab}'
 		}
 	}
 	
-	; Unbinds/TODO
 	+l::return					; L - end of page
 	q::return						; q - record macro
 	+q::return
@@ -143,7 +106,7 @@ WatchCaret() {
 ; ############################
 
 
-#HotIf mode == "NORMAL" && WinActive("ahk_class Notepad") || mode == "VISUAL" && WinActive("ahk_class Notepad")				; || "VISUAL-LINE" || "VISUAL-BLOCK"
+#HotIf mode == "NORMAL" OR mode == "VISUAL" 				; || "VISUAL-LINE" || "VISUAL-BLOCK"
 	d:: {
 		if (A_PriorHotkey != A_ThisHotkey) {				; d
 			Send "^x"
@@ -176,7 +139,7 @@ WatchCaret() {
 ; ##	 INSERT Mode	##
 ; ########################
 
-#HotIf mode == "INSERT" && WinActive("ahk_class Notepad")
+#HotIf mode == "INSERT"
 
 	ESCAPE:: SetMode("NORMAL")
 	
@@ -187,7 +150,7 @@ WatchCaret() {
 ; ##	 VISUAL Mode	##
 ; ########################
 
-#HotIf mode == "VISUAL" && WinActive("ahk_class Notepad")
+#HotIf mode == "VISUAL"
 
 	ESCAPE:: SetMode("NORMAL")
 	i:: SetMode("INSERT")
@@ -207,7 +170,7 @@ WatchCaret() {
 ; ##	COMMAND Mode	##
 ; ########################
 
-#HotIf mode == 'COMMAND' && WinActive("ahk_class Notepad")
+#HotIf mode == 'COMMAND'
 
 	ESCAPE:: SetMode("NORMAL")
 	

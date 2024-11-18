@@ -1,6 +1,6 @@
 
 # Work in Progress
----
+
 ##
 
 The aim of this AutoHotkey script is to provide an out-of-the-box, vimified experience
@@ -18,3 +18,5 @@ For web browsing I recommend using the [Vimium browser extension](https://vimium
 - MS Word
 - Windows Calculator
 - CLI mode
+- VSCode
+- VisualStudio

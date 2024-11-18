@@ -8,21 +8,23 @@
 if (notepad == 1)
 	#include "%A_ScriptDir%\modules\Notepad.ahk"
 
-; MsgBox "Velcome to Vicki's Vimified Vindows`n`Press Win+x to gtfo"
+activeModule := ""
 
 ; DEBUG
 if (debugMode) {
 	KeyHistory
 }
 
+#x:: ExitApp
+
+SetTimer UpdateActiveModule, 100
+UpdateActiveModule() {
+	if WinActive("ahk_class Notepad") && notepad{
+		global activeModule := "Notepad"
+	}
+}
 
 SetMode(new_mode) {
 	global mode := new_mode
-	UIModeBarUpdate()					; TODO: Make general UI update function
+	UILastLineUpdate()					; TODO: Make general UI update function
 	}
-
-; ################
-; ##	GENERAL	##
-; ################
-
-#x:: ExitApp
