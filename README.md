@@ -9,14 +9,13 @@ For web browsing I recommend using the [Vimium browser extension](https://vimium
 ## Applications
 
 - Notepad
+- Windows Calculator
 
 ## Planned Applications
 
 - Notepad++
-- Windows Explorer
 - MS Excel
 - MS Word
-- Windows Calculator
 - CLI mode
 - VSCode
 - VisualStudio
