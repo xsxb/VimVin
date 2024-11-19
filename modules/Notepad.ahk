@@ -4,20 +4,31 @@
 
 ; TODO: Get EditControl properties
 
+execCountStr := ""
 
 ; Listening for any keystroke
 ; Doesn't register arrow keys
+; Goto is cool
 ih := InputHook("L1 M V")
 ih.NotifyNonText := 1
-ih.MinSendLevel := 0
+; ih.MinSendLevel := 0
 AnyKeyListen:
 	ih.Start()
 	ih.Wait()
+	;if (!InStr("012346789", ih.Input) && execCountStr) {				; Non numeric input triggers exec
+	;	num := Integer(execCountStr)									; TODO: Define triggerable commands
+	;	loop execCountStr {												; Will do later
+	;		Send ih.Input
+	;		global execCountStr := ""
+	;	}
+	;}	
 	if (ih.Input){
 		;UpdateText()
 		UpdatePos()
 		Goto AnyKeyListen
 	}
+
+
 
 ; SetTimer UpdateText, 100							; To be called once on editor open (and on keystroke?)
 UpdateText() {
@@ -43,7 +54,7 @@ WatchCaret() {
 		global caretPosX := x
 		global caretPosY := y
 		UIUpdateCaret(x, y)
-        ToolTip "X" x " Y" y, x, y - 20		; Not my line, Y value doesn't make sense
+        ToolTip "X" x " Y" y, x, y - 20
 		}
     else {
         ; ToolTip "No caret"
@@ -170,16 +181,6 @@ WatchCaret() {
 	`;::return
 	/:: Send '^f'				; TODO: Set search forward
 	?:: Send '^f'				; TODO: Set search backward
-	0::return
-	1::return
-	2::return
-	3::return
-	4::return
-	5::return
-	6::return
-	7::return
-	8::return
-	9::return
 	!::return
 	#::return
 	%::return
@@ -189,7 +190,20 @@ WatchCaret() {
 	(::return
 	)::return
 	Space::return
-	
+
+; Listen for n times execute command
+; TODO: Limit max size
+	0::global execCountStr := execCountStr . A_ThisHotkey
+	1::global execCountStr := execCountStr . A_ThisHotkey
+	2::global execCountStr := execCountStr . A_ThisHotkey
+	3::global execCountStr := execCountStr . A_ThisHotkey
+	4::global execCountStr := execCountStr . A_ThisHotkey
+	5::global execCountStr := execCountStr . A_ThisHotkey
+	6::global execCountStr := execCountStr . A_ThisHotkey
+	7::global execCountStr := execCountStr . A_ThisHotkey
+	8::global execCountStr := execCountStr . A_ThisHotkey
+	9::global execCountStr := execCountStr . A_ThisHotkey
+
 #HotIf
 
 

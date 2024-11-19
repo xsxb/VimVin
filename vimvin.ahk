@@ -7,8 +7,8 @@
 activeModule := ""
 
 ; MODULES:
-if (notepad == 1)
-	#include "%A_ScriptDir%\modules\Notepad.ahk"
+#include "%A_ScriptDir%\modules\Notepad.ahk"
+#include "%A_ScriptDir%\modules\Calculator.ahk"
 
 
 ; DEBUG

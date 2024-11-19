@@ -26,3 +26,9 @@ U - change to upper (visual)
 <<
 
  Execute command n times					; Read [0-9] with KeybdHook into hotstring for executing n times
+
+Useful code snippet:
+Loop 100 {
+   i := A_Index - 1
+   ToolTip%i% := new CustomToolTip({text: Format("{:02}", i), x: mod(i, 10)*40, y: i//10*40})
+}
